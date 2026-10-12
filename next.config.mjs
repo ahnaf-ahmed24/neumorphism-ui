@@ -7,6 +7,17 @@ const nextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  
+  // Unsplash ইমেজের জন্য remotePatterns যুক্ত করা হলো
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+  },
+
   turbopack: {
     rules: {
       "*.css": {
