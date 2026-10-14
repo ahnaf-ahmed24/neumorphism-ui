@@ -5,6 +5,8 @@ import Link from 'next/link';
 
 export default function CategoryNav() {
   const [activeCategory, setActiveCategory] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileExpandedCat, setMobileExpandedCat] = useState(null);
 
   const categories = [
     {
@@ -175,9 +177,59 @@ export default function CategoryNav() {
   ];
 
   return (
-    <div className="rounded-2xl w-full bg-[#121418] border-t border-b  border-gray-800 shadow-[inset_0px_2px_4px_#0a0b0d]">
+    <div className="rounded-2xl w-full bg-[#121418] border-t border-b border-gray-800 shadow-[inset_0px_2px_4px_#0a0b0d]">
       <div className="mx-auto max-w-8xl px-4">
-        <ul className="flex items-center justify-between py-2.5 gap-4 text-xs md:text-sm">
+        
+        {/* মোবাইল ভিউ এর জন্য 'All Categories' বাটন */}
+        <div className="flex md:hidden items-center justify-between py-2.5">
+          <span className="text-xs font-semibold text-gray-200">Categories</span>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#121418] text-xs font-medium text-[#ff5e00] shadow-[inset_2px_2px_4px_#0a0b0d,inset_-2px_-2px_4px_#1a1d23] border border-gray-800 transition-all active:scale-95"
+          >
+            <span>{mobileMenuOpen ? 'Close Categories' : 'All Categories'}</span>
+            <span className="text-[10px]">{mobileMenuOpen ? '▲' : '▼'}</span>
+          </button>
+        </div>
+
+        {/* মোবাইল ক্যাটাগরি ড্রপডাউন সেকশন */}
+        {mobileMenuOpen && (
+          <div className="md:hidden pb-3 pt-1 max-h-[450px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <ul className="flex flex-col gap-2">
+              {categories.map((cat) => (
+                <li key={cat.name} className="border-b border-gray-800/50 pb-2">
+                  <div 
+                    onClick={() => setMobileExpandedCat(mobileExpandedCat === cat.name ? null : cat.name)}
+                    className="flex items-center justify-between cursor-pointer px-3 py-2 rounded-xl text-xs text-gray-300 hover:text-[#ff5e00] shadow-[inset_2px_2px_4px_#0a0b0d,inset_-2px_-2px_4px_#1a1d23]"
+                  >
+                    <span className="font-medium">{cat.name}</span>
+                    <span className="text-[10px]">{mobileExpandedCat === cat.name ? '▲' : '▼'}</span>
+                  </div>
+
+                  {/* সাব-আইটেম লিস্ট */}
+                  {mobileExpandedCat === cat.name && (
+                    <ul className="flex flex-col gap-1 pl-3 pt-2">
+                      {cat.items.map((subItem) => (
+                        <li key={subItem}>
+                          <Link 
+                            href="#"
+                            className="flex items-center justify-between rounded-lg px-3 py-1.5 text-xs text-gray-400 hover:text-gray-100 hover:bg-[#121418]"
+                          >
+                            <span>{subItem}</span>
+                            <span className="text-[10px] text-gray-600">▶</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* ডেসকটপ ভিউ (আগের ডিজাইন হুবহু অপরিবর্তিত রাখা হয়েছে) */}
+        <ul className="hidden md:flex items-center justify-between py-2.5 gap-4 text-xs md:text-sm">
           {categories.map((cat) => (
             <li 
               key={cat.name}
@@ -213,6 +265,7 @@ export default function CategoryNav() {
             </li>
           ))}
         </ul>
+
       </div>
     </div>
   );
